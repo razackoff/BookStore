@@ -6,7 +6,7 @@ public interface ICategoryService
 {
     Task<List<Category>> GetAllCategoriesAsync();
     Task<Category> GetCategoryByIdAsync(string id);
-    Task AddCategoryAsync(Category category);
-    Task UpdateCategoryAsync(Category category);
+    Task<string> AddCategoryAsync(string category);
+    Task UpdateCategoryAsync(string id, string category);
     Task DeleteCategoryAsync(string id);
 }

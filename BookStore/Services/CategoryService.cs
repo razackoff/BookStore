@@ -21,14 +21,19 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
         return category;
     }
 
-    public async Task AddCategoryAsync(Category category)
+    public async Task<string> AddCategoryAsync(string category)
     {
-        await categoryRepository.AddAsync(category);
+        var _category = new Category();
+        _category.Id = Guid.NewGuid().ToString();
+        await categoryRepository.AddAsync(_category);
+        return _category.Id;
     }
 
-    public async Task UpdateCategoryAsync(Category category)
+    public async Task UpdateCategoryAsync(string id, string category)
     {
-        await categoryRepository.UpdateAsync(category);
+        var _category = await GetCategoryByIdAsync(id);
+        _category.Name = category;
+        await categoryRepository.UpdateAsync(_category);
     }
 
     public async Task DeleteCategoryAsync(string id)

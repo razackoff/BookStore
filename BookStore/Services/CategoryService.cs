@@ -25,6 +25,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
     {
         var _category = new Category();
         _category.Id = Guid.NewGuid().ToString();
+        _category.Name = category;
         await categoryRepository.AddAsync(_category);
         return _category.Id;
     }

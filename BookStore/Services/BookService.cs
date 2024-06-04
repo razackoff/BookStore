@@ -41,8 +41,23 @@ public class BookService(IBookRepository bookRepository, IWebHostEnvironment web
         var book = await GetBookByIdAsync(id);
 
         var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
-        var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "files");
+        //var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "files");
+        
+        var src = Environment.GetEnvironmentVariable("UPLOADS_FOLDER");
 
+        // Validate if the environment variable is set
+        if (string.IsNullOrEmpty(src))
+        {
+            throw new Exception("Environment variable UPLOADS_FOLDER is not set");
+        }
+        
+        var uploadsFolder = Path.Combine(src, "files");
+
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+        
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
         await using (var stream = new FileStream(filePath, FileMode.Create))
@@ -63,8 +78,21 @@ public class BookService(IBookRepository bookRepository, IWebHostEnvironment web
             throw new ArgumentException("File is empty");
 
         var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
-        var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+        var src = Environment.GetEnvironmentVariable("UPLOADS_FOLDER");
 
+        // Validate if the environment variable is set
+        if (string.IsNullOrEmpty(src))
+        {
+            throw new Exception("Environment variable UPLOADS_FOLDER is not set");
+        }
+        
+        var uploadsFolder = Path.Combine(src, "images");
+        
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+        
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
         await using (var stream = new FileStream(filePath, FileMode.Create))

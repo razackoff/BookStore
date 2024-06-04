@@ -7,16 +7,16 @@ namespace BookStore.Controllers;
 
 [Route("api/categories")]
 [ApiController]
-public class CategoryController(CategoryService categoryService) : ControllerBase
+public class CategoryController(ICategoryService categoryService) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("GetAllCategories")]
     public async Task<IActionResult> GetAllCategories()
     {
         var categories = await categoryService.GetAllCategoriesAsync();
         return Ok(categories);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetCategoryById")]
     public async Task<IActionResult> GetCategoryById(string id)
     {
         try
@@ -30,24 +30,19 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddCategory(Category category)
+    [HttpPost("AddCategory")]
+    public async Task<IActionResult> AddCategory(string category)
     {
-        await categoryService.AddCategoryAsync(category);
-        return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id }, category);
+        var id = await categoryService.AddCategoryAsync(category);
+        return Ok(id);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCategory(string id, Category category)
+    [HttpPut("UpdateCategory")]
+    public async Task<IActionResult> UpdateCategory(string id, string category)
     {
-        if (id != category.Id)
-        {
-            return BadRequest("ID in the request body does not match the ID in the route");
-        }
-
         try
         {
-            await categoryService.UpdateCategoryAsync(category);
+            await categoryService.UpdateCategoryAsync(id, category);
             return Ok(category);
         }
         catch (NotFoundException ex)
@@ -56,7 +51,7 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("DeleteCategory")]
     public async Task<IActionResult> DeleteCategory(string id)
     {
         await categoryService.DeleteCategoryAsync(id);

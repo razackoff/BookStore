@@ -79,6 +79,7 @@
     volumes:
       lona_database_data:
     ```
+   Примечание: Используйте образ razackoff/book-store-api-amd64 для архитектуры X86 и razackoff/book-store-api-arm для ARM.
    
 2. Запустите приложение с помощью команды:
     ```bash
